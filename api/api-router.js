@@ -11,7 +11,9 @@ router.get('/', (req, res) => {
 })
 
 router.get('/users', restricted, (req, res) => {
-    Users.find()
+    const findIt = 'sales';
+    
+    Users.find(req.decodedToken.department)
         .then(users => {
             res.status(200).json(users)
         })
@@ -62,6 +64,7 @@ function generateToken(user){
     const payload = {
         subject: user.id,
         username: user.username,
+        department: user.department,
     };
     const options = {
         expiresIn: '10h'

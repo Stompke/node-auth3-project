@@ -6,8 +6,9 @@ module.exports = {
     findBy
 }
 
-function find() {
+function find(filter) {
     return db('users')
+    .where({department: filter})
 }
 
 function add(user) {
