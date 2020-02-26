@@ -1,13 +1,16 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const restricted = require('./restricted-middleware');
 
 const Users = require('./users-model');
+const { jwtSecret } = require('../config/secrets');
 
 router.get('/', (req, res) => {
     res.status(200).json({ message: "made it to /api" })
 })
 
-router.get('/users', (req, res) => {
+router.get('/users', restricted, (req, res) => {
     Users.find()
         .then(users => {
             res.status(200).json(users)
@@ -17,7 +20,7 @@ router.get('/users', (req, res) => {
         })
 })
 
-router.post('/users', (req, res) => {
+router.post('/users',   (req, res) => {
     let user = req.body;
     const { password } = req.body;
 
@@ -33,4 +36,36 @@ router.post('/users', (req, res) => {
         })
 })
 
+router.post('/login', (req, res) => {
+    let { username, password } = req.body;
+
+    Users.findBy({username})
+        .first()
+        .then(user => {
+            if( user && bcrypt.compareSync(password, user.password)) {
+                res.status(200).json({ 
+                    message: `Welcome ${username}!`,
+                    token: generateToken(user)
+                })
+            } else {
+                res.status(401).json({ message: "Invalid Credentials" });
+            }
+        })
+        .catch( err => {
+            res.status(500).json({ error: "Could not log in" });
+        })
+})
+
 module.exports = router;
+
+function generateToken(user){
+    const payload = {
+        subject: user.id,
+        username: user.username,
+    };
+    const options = {
+        expiresIn: '10h'
+    };
+
+    return jwt.sign(payload, jwtSecret, options)
+}
