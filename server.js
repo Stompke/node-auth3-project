@@ -3,12 +3,16 @@ const helmet = require('helmet');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 
+const apiRouter = require('./api/api-router');
+
 
 const server = express();
 
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
+
+server.use('/api', apiRouter);
 
 
 server.get('/', (req, res) => {
