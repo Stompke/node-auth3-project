@@ -31,6 +31,7 @@ router.post('/users',   (req, res) => {
 
     Users.add(user)
         .then(added => {
+            
             res.status(200).json(added)
         })
         .catch(err => {

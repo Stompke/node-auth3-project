@@ -1,4 +1,6 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -79,6 +81,7 @@ const useStyles = makeStyles(theme => ({
   }));
 
 const Navigation = () => {
+    const history = useHistory();
 
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -86,6 +89,12 @@ const Navigation = () => {
   
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    const logoutHandle = () => {
+        localStorage.removeItem('token')
+        handleMenuClose()
+        history.push('/login');
+    }
   
     const handleProfileMenuOpen = event => {
       setAnchorEl(event.currentTarget);
@@ -115,9 +124,10 @@ const Navigation = () => {
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
+        <Link onClick={handleMenuClose} to="/users"><MenuItem >Users</MenuItem></Link>
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
         <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
+        <MenuItem onClick={logoutHandle}>Log Out</MenuItem>
         
       </Menu>
     );
