@@ -24,15 +24,29 @@ router.get('/users', restricted, (req, res) => {
 
 router.post('/users',   (req, res) => {
     let user = req.body;
-    const { password } = req.body;
+    const { password, username } = req.body;
 
     const hash = bcrypt.hashSync(password, 8);
     user.password = hash;
 
     Users.add(user)
         .then(added => {
+            Users.findBy({username})
+                .first()
+                .then(user => {
+                    if( user && bcrypt.compareSync(password, user.password)) {
+                        res.status(200).json({ 
+                            message: `Welcome ${username}! from ${user.department}`,
+                            token: generateToken(user)
+                        })
+                    } else {
+                        res.status(401).json({ message: "Invalid Credentials" });
+                    }
+                })
+                .catch( err => {
+                    res.status(500).json({ error: "Could not log in" });
+                })
             
-            res.status(200).json(added)
         })
         .catch(err => {
             res.status(500).json({ message: "Could not add user" });

@@ -6,17 +6,17 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
+// import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+// import MenuIcon from '@material-ui/icons/Menu';
+// import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { Link, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     grow: {
@@ -80,7 +80,7 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-const Navigation = () => {
+const Navigation = (props) => {
     const history = useHistory();
 
     const classes = useStyles();
@@ -92,6 +92,7 @@ const Navigation = () => {
 
     const logoutHandle = () => {
         localStorage.removeItem('token')
+        props.setLoggedIn(false);
         handleMenuClose()
         history.push('/login');
     }
@@ -189,9 +190,9 @@ const Navigation = () => {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Link to="/"><Typography className={classes.title} variant="h6" noWrap>
           User Control
-          </Typography>
+          </Typography></Link>
           {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -207,9 +208,8 @@ const Navigation = () => {
           </div> */}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-          <Link to="/">Home</Link>
-          <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
+          
+
 
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">

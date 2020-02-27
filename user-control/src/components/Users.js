@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AxiosWithAuth, axiosWithAuth } from '../utils/axiosWithAuth';
+import { axiosWithAuth } from '../utils/axiosWithAuth';
 
 const Users = () => {
     const [ users, setUsers ] = useState([]);
@@ -18,7 +18,7 @@ const Users = () => {
     return (
         <>
         <h1>Users</h1>
-        {users.map(user => <p>{user.username}</p>)}
+        {users.map(user => <p key={user.id}>{user.username}</p>)}
         </>
     )
 }
